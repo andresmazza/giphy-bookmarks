@@ -1,19 +1,14 @@
 <?php
 
+use App\Http\Controllers\Api\GifController;
 use App\Http\Controllers\AuthController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('auth:api');
 
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-
 Route::middleware('auth:api')->group(function () {
-    Route::get('user', 'AuthController@user');
-    // Other authenticated routes...
+    Route::get('gifs/search', [GifController::class, 'index']);
+    Route::post('gifs/favorites', [GifController::class, 'store']);
 });
