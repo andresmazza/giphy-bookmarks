@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Gif;
 use Illuminate\Support\Facades\Auth;
 use App\Services\GiphyService;
 use Illuminate\Http\Request;
+use Validator;
 
 
 class GifController extends Controller
@@ -41,14 +43,46 @@ class GifController extends Controller
     public function store(Request $request)
     {
         $userId = Auth::id();
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'id' => 'required|string',
-            'alias' => 'required|string'
+            'alias' => 'required|string',
+            'user_id' => 'required|integer',
         ]);
 
-        $resp = $this->giphyService->favorite($userId, $request->id, $request->alias);
 
-        return response(null, $resp->status());
+
+        if ($validator->fails()) {
+            return response(['message' => 'Validation error', 'errors' => $validator->errors()], 400);
+        }
+        if ($request->input('user_id') != $userId) {
+            return response([
+                'message' => 'Validation error',
+                'errors' => [
+                    "user_id" =>
+                        "The entered user does not match with the logged in user."
+                ]
+            ], 400);
+        }
+
+        if (!$this->giphyService->exist($request->id)) {
+            return response([
+                'message' => 'Validation error',
+                'errors' => [
+                    "id" =>
+                        "Invalid gif id."
+                ]
+            ], 400);
+        }
+
+
+        $count = Gif::where(['id' => $request->id, 'user_id' => $userId])->count();
+        if ($count > 0) {
+            return response(['message' => 'The item already exists'], 400);
+        }
+
+        Gif::create(['id' => $request->id, 'alias' => $request->alias, 'user_id' => $userId]);
+
+        return response(null, 201);
     }
 
     /**
@@ -57,8 +91,8 @@ class GifController extends Controller
     public function show(string $id)
     {
 
-        $response = $this->giphyService->show($id);
-        
+        $response = $this->giphyService->findById($id);
+
         return response($response->body(), $response->status());
 
     }

@@ -31,7 +31,7 @@ class GiphyService
     }
 
 
-    public function show($giphyId)
+    public function findById($giphyId)
     {
         try {
             $resp = $this->client->send(ApiRequest::get("gifs/" . $giphyId));
@@ -42,6 +42,13 @@ class GiphyService
         return $resp;
     }
 
+    public function exist($giphyId) {
 
+        $resp = $this->findById($giphyId);
+        if ($resp->status() == 200 && $resp->json()['data'] && $resp->json()['data']['id'] == $giphyId) {
+            return true;
+        }
+        return false;
+    }
 
 }
