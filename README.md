@@ -32,8 +32,14 @@ git clone https://github.com/andres-torres/giphy-bookmarks.git
 2 - entrar al directorio del proyecto
 
 ```bash
-cd giphy-bookmarks
+cd giphy-bookmarks 
 ```
+3 - Instalacion de dependencias PHP
+
+```bash
+    composer install
+```
+
 
 3 - Para lanzar el proyecto en docker debemos ejecutar los siguientes comandos:
 
@@ -44,7 +50,7 @@ cd giphy-bookmarks
 4 - Corremos los migrates de bases de datos
 
 ```bash
-./vendor/bin/sail migrate
+./vendor/bin/sail artisan migrate
 ```
 
 ### Diagrama de Casos de Uso
