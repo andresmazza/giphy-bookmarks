@@ -3,21 +3,19 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Support\ApiRequest;
-use App\Support\GiphyApiClient;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
+use App\Services\GiphyService;
+use Illuminate\Http\Request;
+
 
 class GifController extends Controller
 {
-
 
     /**
      * Create a new controller instance.
      */
     public function __construct(
-        protected GiphyApiClient $client
+        protected GiphyService $giphyService
     ) {
     }
 
@@ -26,30 +24,14 @@ class GifController extends Controller
      */
     public function search(Request $request)
     {
-        
+
         $query = $request->input('query');
-        $limit = $request->input('limit','10');
-        $offset = $request->input('offset','0');
+        $limit = $request->input('limit', '10');
+        $offset = $request->input('offset', '0');
 
-        $key = config('giphy.api_key');
-
-        // php
-        //$url = "http://api.giphy.com/v1/gifs/search?q=ryan+gosling&api_key=YOUR_API_KEY&limit=5";
-        // print_r(json_decode(file_get_contents($url)));
-
-        ///ESTO VA EN UN SERVICIO
-        //$client = app(GiphyApiClient::class);
-        $clientRequest = ApiRequest::get('gifs/search')
-           // ->setQuery('q', $query)
-            ->setQuery('limit', $limit)
-            ->setQuery('offset', $offset);
-
-        $resp = $this->client->send($clientRequest);
-
-
+        $resp = $this->giphyService->search($query, $limit, $offset);
 
         return response(json_decode($resp, true), $resp->status());
-
     }
 
 
@@ -58,24 +40,15 @@ class GifController extends Controller
      */
     public function store(Request $request)
     {
-        $user = Auth::id();
+        $userId = Auth::id();
         $request->validate([
             'id' => 'required|string',
             'alias' => 'required|string'
         ]);
 
+        $resp = $this->giphyService->favorite($userId, $request->id, $request->alias);
 
-        //     /*$favorite = Favorite::create([
-        //         'gif_id' => $request->gif_id,
-        //         'alias' => $request->alias,
-        //         'user_id' => Auth::id(),  // Obtener el ID del usuario autenticado
-        //     ]);*/
-
-        //     return response()->json([
-        //         'message' => 'GIF agregado a favoritos exitosamente.',
-        //         'favorite' => $favorite
-        //     ], 201);
-        return $request;
+        return response(null, $resp->status());
     }
 
     /**
@@ -83,14 +56,12 @@ class GifController extends Controller
      */
     public function show(string $id)
     {
-        $clientRequest = ApiRequest::get("gifs/" . $id);
 
-        $resp = $this->client->send($clientRequest);
-
-        return response(json_decode($resp, true), $resp->status());
+        $response = $this->giphyService->show($id);
+        
+        return response($response->body(), $response->status());
 
     }
-
 
 
 }
