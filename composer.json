@@ -34,7 +34,8 @@
     },
     "scripts": {
         "api": [
-            "ls -la"
+            "./vendor/bin/sail up -d",
+            "./vendor/bin/sail artinsa migrate"
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
