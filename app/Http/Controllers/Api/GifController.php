@@ -82,7 +82,7 @@ class GifController extends Controller
 
         Gif::create(['id' => $request->id, 'alias' => $request->alias, 'user_id' => $userId]);
 
-        return response(null, 201);
+        return response("Created", 201);
     }
 
     /**

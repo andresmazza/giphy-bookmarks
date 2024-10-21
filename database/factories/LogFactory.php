@@ -23,6 +23,12 @@ class LogFactory extends Factory
     {
         return [
             'user_id' =>  User::factory(),
+            'service' => fake()->randomElement([
+                    'api/gifs/search',
+                    'api/gifs/1',
+                    'api/login',
+                    'api/gifs/favorites',
+                ]),
             'request' => fake()->text(),
             'status' => fake()->randomElement([200,201,404,500]),
             'response'=> fake()->text(),

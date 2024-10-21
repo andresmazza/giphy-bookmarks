@@ -12,6 +12,7 @@ class Log extends Model
     
     protected $fillable = [
         'user_id',
+        'service',
         'request',
         'status',
         'response',
