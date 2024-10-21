@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Gif;
 use Illuminate\Support\Facades\Auth;
 use App\Services\GiphyService;
 use Illuminate\Http\Request;
+use App\Models\Gif;
 use Validator;
 
 
@@ -28,7 +28,7 @@ class GifController extends Controller
     {
 
         $query = $request->input('query');
-        $limit = $request->input('limit', '10');
+        $limit = $request->input('limit',  config('giphy.defualt_items_per_page'));
         $offset = $request->input('offset', '0');
 
         $resp = $this->giphyService->search($query, $limit, $offset);
