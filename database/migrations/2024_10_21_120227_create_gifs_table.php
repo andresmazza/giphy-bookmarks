@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('gifs', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->unsignedBigInteger('user_id')->primary();
+            $table->string('id');
+            $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('alias');
             $table->timestamps();

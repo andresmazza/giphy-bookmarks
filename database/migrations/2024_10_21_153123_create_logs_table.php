@@ -13,13 +13,12 @@ return new class extends Migration
     {
         Schema::create('logs', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger(column: 'user_id');
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->string('service');
-            $table->text('request');
-            $table->string('status');
-            $table->text('response');
-            $table->string('ip');
+            $table->unsignedBigInteger(column: 'user_id')->nullable();
+            $table->string('service')->nullable();
+            $table->text('request')->nullable();
+            $table->string('status')->nullable();
+            $table->text('response')->nullable();
+            $table->string('ip')->nullable();
             $table->timestamps();
         });
     }
