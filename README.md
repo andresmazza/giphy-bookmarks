@@ -26,7 +26,7 @@ Este proyecto cuenta con la herramienta de sail que nos pemitira ejecutar el pro
 1 -  clonar el repositorio
 
 ```bash
-git clone https://github.com/andres-torres/giphy-bookmarks.git 
+git clone https://github.com/andresmazza/giphy-bookmarks.git 
 ```
 
 2 - entrar al directorio del proyecto
